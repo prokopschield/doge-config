@@ -1,6 +1,7 @@
 import { read, write } from 'doge-json';
 import fs from 'fs';
 import path from 'path';
+import { normalizeConfigName } from './normalizeConfigName';
 
 type ValidConfigValue = ConfigField | string | number;
 
@@ -66,10 +67,7 @@ export class Config extends ConfigField {
 
 	constructor (name: string) {
 		super(null, null);
-		name = name
-			.toLowerCase()
-			.replace(/\.json/gi, '')
-			.replace(/[^a-z0-9]+/, '-')
+		name = normalizeConfigName(name);
 		this.#_file = path.resolve('.', 'config', name + '.json');
 		if (!fs.existsSync('./config')) {
 			fs.mkdirSync('./config');
