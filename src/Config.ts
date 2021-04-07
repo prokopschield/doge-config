@@ -61,6 +61,41 @@ class ConfigField {
 	set (prop: string, val: ValidConfigValue | UnknownObject): ValidConfigValue {
 		return this.__set(prop, val);
 	}
+
+	__getField (prop: string): ConfigField {
+		let val = this.__get(prop);
+		if (val instanceof ConfigField) {
+			return val;
+		} else {
+			this.__set(prop, { data: val });
+			return this.__getField(prop);
+		}
+	}
+
+	__getString (prop: string): string {
+		let val = this.__get(prop);
+		if (typeof val === 'string') {
+			return val;
+		} else if (typeof val === 'object') {
+			return Object.keys(val).length ? JSON.stringify(val, null, '\t') + '\n' : '';
+		} else if (val) {
+			return val.toString();
+		} else return '';
+	}
+
+	__getNumber (prop: string): number {
+		let val = this.__get(prop);
+		if (typeof val === 'number') {
+			return val;
+		} else return parseFloat(this.__getString(prop)) || 0;
+	}
+
+	__getBoolean (prop: string): boolean {
+		let val = this.__get(prop);
+		if (typeof val === 'object') {
+			return !!Object.keys(val).length;
+		} else return !!val;
+	}
 }
 
 export class Config extends ConfigField {

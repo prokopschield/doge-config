@@ -11,6 +11,10 @@ declare class ConfigField {
     save(): void;
     get(prop: string): ValidConfigValue;
     set(prop: string, val: ValidConfigValue | UnknownObject): ValidConfigValue;
+    __getField(prop: string): ConfigField;
+    __getString(prop: string): string;
+    __getNumber(prop: string): number;
+    __getBoolean(prop: string): boolean;
 }
 export declare class Config extends ConfigField {
     #private;
