@@ -3,13 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import { normalizeConfigName } from './normalizeConfigName';
 
-type ValidConfigValue = ConfigField | string | number;
+export type ValidConfigValue = ConfigField | string | number;
 
-type UnknownObject = {
+export type UnknownObject = {
 	[prop: string]: UnknownObject | ValidConfigValue;
 };
 
-class ConfigField {
+export class ConfigField {
 	constructor (parent: Config | ConfigField | null, data: UnknownObject | null) {
 		this.#_parent = parent;
 		if (data) {
@@ -32,7 +32,7 @@ class ConfigField {
 		return this.#_data[prop] || this.__set(prop, {});
 	}
 
-	__set (prop: string, val: ValidConfigValue | UnknownObject, save = true): ValidConfigValue {
+	__set (prop: string, val: ValidConfigValue | UnknownObject | object, save = true): ValidConfigValue {
 		this.#_data[prop] = (typeof val === 'object') ? new ConfigField(this, { ...val }) : val;
 		Object.defineProperty(this, prop, {
 			configurable: true,
@@ -40,7 +40,7 @@ class ConfigField {
 			get () {
 				return this.#_data[prop];
 			},
-			set (val: ValidConfigValue | UnknownObject) {
+			set (val: ValidConfigValue | UnknownObject | object) {
 				this.__set(prop, val);
 			}
 		});
@@ -58,7 +58,7 @@ class ConfigField {
 		return this.__get(prop);
 	}
 
-	set (prop: string, val: ValidConfigValue | UnknownObject): ValidConfigValue {
+	set (prop: string, val: ValidConfigValue | UnknownObject | object): ValidConfigValue {
 		return this.__set(prop, val);
 	}
 
@@ -95,6 +95,10 @@ class ConfigField {
 		if (typeof val === 'object') {
 			return !!Object.keys(val).length;
 		} else return !!val;
+	}
+
+	__has (prop: string): boolean {
+		return (prop in this);
 	}
 }
 
