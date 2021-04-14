@@ -16,9 +16,10 @@ export declare class ConfigField {
     __getNumber(prop: string): number;
     __getBoolean(prop: string): boolean;
     __has(prop: string): boolean;
+    __setDefault(...initArray: Array<any>): void;
 }
 export declare class Config extends ConfigField {
     #private;
-    constructor(name: string);
+    constructor(name: string, defaults?: object);
     __save(): void;
 }

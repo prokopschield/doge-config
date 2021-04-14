@@ -100,11 +100,41 @@ export class ConfigField {
 	__has (prop: string): boolean {
 		return (prop in this);
 	}
+
+	__setDefault (...initArray: Array<any>) {
+		for (const init of initArray) {
+			if (init && (typeof init === 'object')) {
+				for (const prop in init) {
+					const val: any = init[prop];
+					if (typeof val === 'object') {
+						const candidate = this.#_data[prop] || this.__set(prop, {}, false);
+						const field: ConfigField = (
+							(candidate instanceof ConfigField)
+							? candidate
+							: (
+								this.__set(prop, { data: candidate }, false),
+								this.__getField(prop)
+							)
+						);
+						field.__setDefault(val);
+					} else {
+						if (!this.__has(prop)) {
+							this.__set(prop, val, false);
+						}
+					}
+				}
+			} else if (init) {
+				if (!this.__has('data')) {
+					this.__set('data', init, false);
+				}
+			}
+		}
+	}
 }
 
 export class Config extends ConfigField {
 
-	constructor (name: string) {
+	constructor (name: string, defaults?: object) {
 		super(null, null);
 		name = normalizeConfigName(name);
 		this.#_file = path.resolve('.', 'config', name + '.json');
@@ -112,9 +142,7 @@ export class Config extends ConfigField {
 			fs.mkdirSync('./config');
 		}
 		const data = read(this.#_file);
-		for (const key in data) {
-			this.__set(key, data[key], false);
-		}
+		this.__setDefault(data, defaults);
 	}
 
 	#_file: string;
