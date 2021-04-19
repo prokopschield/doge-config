@@ -1,6 +1,7 @@
 import { read, write } from 'doge-json';
 import fs from 'fs';
 import path from 'path';
+import ConfigArray from './ConfigArray';
 import { normalizeConfigName } from './normalizeConfigName';
 
 export type ValidConfigValue = ConfigField | string | number;
@@ -19,6 +20,15 @@ export class ConfigField {
 		}
 	}
 
+	#_array?: ConfigArray;
+	get array () {
+		if (this.#_array) {
+			return this.#_array;
+		} else {
+			return this.#_array = new ConfigArray(this);
+		}
+	}
+
 	#_parent: Config | ConfigField | null;
 	#_data: {
 		[prop: string]: ConfigField | string | number;
@@ -26,6 +36,9 @@ export class ConfigField {
 
 	__save (): void {
 		this.#_parent?.save();
+		if (this.#_array) {
+			Object.assign(this.#_array, Object.values(this));
+		}
 	}
 
 	__get (prop: string): ValidConfigValue {

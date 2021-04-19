@@ -1,3 +1,4 @@
+import ConfigArray from './ConfigArray';
 export declare type ValidConfigValue = ConfigField | string | number;
 export declare type UnknownObject = {
     [prop: string]: UnknownObject | ValidConfigValue;
@@ -5,6 +6,7 @@ export declare type UnknownObject = {
 export declare class ConfigField {
     #private;
     constructor(parent: Config | ConfigField | null, data: UnknownObject | null);
+    get array(): ConfigArray;
     __save(): void;
     __get(prop: string): ValidConfigValue;
     __set(prop: string, val: ValidConfigValue | UnknownObject | object, save?: boolean): ValidConfigValue;

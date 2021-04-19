@@ -1,7 +1,7 @@
 {
 	"name": "doge-config",
 	"description": "One-line config file, or more",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"main": "lib/index",
 	"bin": {
 		"doge-config": "lib/cli.js"
