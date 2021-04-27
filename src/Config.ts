@@ -1,5 +1,5 @@
 import { read, write } from 'doge-json';
-import fs from 'fs';
+import { fs } from 'doge-json';
 import path from 'path';
 import ConfigArray from './ConfigArray';
 import { normalizeConfigName } from './normalizeConfigName';
