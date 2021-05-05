@@ -24,7 +24,7 @@ class Config extends ConfigField {
 	#_file: string;
 	#_data: ConfigField;
 
-	__update () {
+	__update (): void {
 		for (const [ prop, data ] of Object.entries(this.#_data)) {
 			if (prop in this) {} else {
 				Object.defineProperty(this, prop, {
@@ -41,12 +41,12 @@ class Config extends ConfigField {
 		}
 	}
 
-	__save () {
+	__save (): void {
 		write(this.#_file, this.#_data);
 		this.__update();
 	}
 
-	get array () {
+	get array (): ConfigArray {
 		return this.#_data.array;
 	}
 
@@ -98,7 +98,7 @@ class Config extends ConfigField {
 		return (prop in this.#_data);
 	}
 
-	__setDefault (...initArray: Array<any>) {
+	__setDefault (...initArray: Array<any>): void {
 		this.#_data.__setDefault(...initArray);
 	}
 

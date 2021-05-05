@@ -16,7 +16,7 @@ class ConfigField {
 	}
 
 	#_array?: ConfigArray;
-	get array () {
+	get array (): ConfigArray {
 		if (this.#_array) {
 			return this.#_array;
 		} else {
@@ -121,7 +121,7 @@ class ConfigField {
 		return (prop in this);
 	}
 
-	__setDefault (...initArray: Array<any>) {
+	__setDefault (...initArray: Array<any>): void {
 		for (const init of initArray) {
 			if (init && (typeof init === 'object')) {
 				for (const prop in init) {
