@@ -10,7 +10,7 @@ class ConfigField {
 		this.#_parent = parent;
 		if (data) {
 			for (const prop in data) {
-				this.__set(prop, data[prop], false)
+				this.__set(prop, data[prop], false);
 			}
 		}
 	}

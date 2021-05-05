@@ -17,7 +17,7 @@ class Config extends ConfigField {
 		}
 		const data = read(this.#_file);
 		this.#_data = new ConfigField(this, null);
-		this.#_data.__setDefault(data, defaults);
+		this.#_data.__setDefault(data || {}, defaults || {});
 		this.__update();
 	}
 
