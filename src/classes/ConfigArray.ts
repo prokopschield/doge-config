@@ -1,10 +1,9 @@
 import {
 	ConfigField,
-	UnknownObject,
-	ValidConfigValue,
-} from '.';
+	types,
+} from '..';
 
-export default class ConfigArray extends Array<ValidConfigValue> {
+export default class ConfigArray extends Array<types.ValidConfigValue> {
 	constructor (field: ConfigField) {
 		super(...Object.values(field));
 		this.#_field = field;
@@ -24,7 +23,7 @@ export default class ConfigArray extends Array<ValidConfigValue> {
 				get () {
 					return undefined;
 				},
-				set (val: ValidConfigValue | UnknownObject | object) {
+				set (val: types.ValidConfigValue | types.UnknownObject | object) {
 					this.__set(key, val);
 				}
 			});

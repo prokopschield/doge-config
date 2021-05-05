@@ -1,19 +1,12 @@
 {
 	"name": "doge-config",
 	"description": "One-line config file, or more",
-	"version": "0.0.7",
+	"version": "0.1.0",
 	"main": "lib/index",
-	"bin": {
-		"doge-config": "lib/cli.js"
-	},
-	"scripts": {
-		"test": "npx nslibmgr test",
-		"start": "node lib/cli"
-	},
 	"author": "Prokop Schield",
 	"license": "GPL-3.0-or-later",
 	"devDependencies": {
-		"@types/node": ">=14.14.35"
+		"@types/node": ">=14"
 	},
 	"keywords": [],
 	"directories": {

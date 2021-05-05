@@ -1,16 +1,11 @@
-import { read, write } from 'doge-json';
-import { fs } from 'doge-json';
-import path from 'path';
+import Config from './Config';
 import ConfigArray from './ConfigArray';
-import { normalizeConfigName } from './normalizeConfigName';
+import {
+	UnknownObject,
+	ValidConfigValue,
+} from '../types';
 
-export type ValidConfigValue = ConfigField | string | number;
-
-export type UnknownObject = {
-	[prop: string]: UnknownObject | ValidConfigValue;
-};
-
-export class ConfigField {
+class ConfigField {
 	constructor (parent: Config | ConfigField | null, data: UnknownObject | null) {
 		this.#_parent = parent;
 		if (data) {
@@ -31,22 +26,24 @@ export class ConfigField {
 
 	#_parent: Config | ConfigField | null;
 	#_data: {
-		[prop: string]: ConfigField | string | number;
+		[prop: string]: ValidConfigValue;
 	} = {};
 
 	__save (): void {
-		this.#_parent?.save();
+		this.#_parent?.__save();
 		if (this.#_array) {
 			Object.assign(this.#_array, Object.values(this));
 		}
 	}
 
 	__get (prop: string): ValidConfigValue {
-		return this.#_data[prop] || this.__set(prop, {});
+		return this.#_data[prop] || this.__set(prop, null);
 	}
 
 	__set (prop: string, val: ValidConfigValue | UnknownObject | object, save = true): ValidConfigValue {
-		this.#_data[prop] = (typeof val === 'object') ? new ConfigField(this, { ...val }) : val;
+		this.#_data[prop] = (typeof val === 'object') ? (
+			val && new ConfigField(this, { ...val })
+		) : val;
 		Object.defineProperty(this, prop, {
 			configurable: true,
 			enumerable: true,
@@ -75,6 +72,10 @@ export class ConfigField {
 		return this.__set(prop, val);
 	}
 
+	has (prop: string): boolean {
+		return this.__has(prop);
+	}
+
 	__getField (prop: string): ConfigField {
 		let val = this.__get(prop);
 		if (val instanceof ConfigField) {
@@ -87,13 +88,15 @@ export class ConfigField {
 
 	__getString (prop: string): string {
 		let val = this.__get(prop);
-		if (typeof val === 'string') {
+		if (!val) {
+			return '';
+		} else if (typeof val === 'string') {
 			return val;
 		} else if (typeof val === 'object') {
 			return Object.keys(val).length ? JSON.stringify(val, null, '\t') + '\n' : '';
-		} else if (val) {
+		} else {
 			return val.toString();
-		} else return '';
+		}
 	}
 
 	__getNumber (prop: string): number {
@@ -106,8 +109,12 @@ export class ConfigField {
 	__getBoolean (prop: string): boolean {
 		let val = this.__get(prop);
 		if (typeof val === 'object') {
-			return !!Object.keys(val).length;
+			return !!(val && Object.keys(val).length);
 		} else return !!val;
+	}
+
+	__getArray (prop: string): ConfigArray {
+		return this.__getField(prop).array;
 	}
 
 	__has (prop: string): boolean {
@@ -145,23 +152,10 @@ export class ConfigField {
 	}
 }
 
-export class Config extends ConfigField {
+export default ConfigField;
+module.exports = ConfigField;
 
-	constructor (name: string, defaults?: object) {
-		super(null, null);
-		name = normalizeConfigName(name);
-		this.#_file = path.resolve('.', 'config', name + '.json');
-		if (!fs.existsSync('./config')) {
-			fs.mkdirSync('./config');
-		}
-		const data = read(this.#_file);
-		this.__setDefault(data, defaults);
-	}
-
-	#_file: string;
-
-	__save () {
-		write(this.#_file, this);
-	}
-
-}
+Object.assign(ConfigField, {
+	default: ConfigField,
+	ConfigField,
+});
