@@ -81,7 +81,7 @@ class ConfigField {
 		if (val instanceof ConfigField) {
 			return val;
 		} else {
-			this.__set(prop, { data: val });
+			this.__set(prop, val ? { data: val } : {});
 			return this.__getField(prop);
 		}
 	}
