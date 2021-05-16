@@ -37,7 +37,7 @@ class ConfigField {
 	}
 
 	__get (prop: string): ValidConfigValue {
-		return this.#_data[prop] || this.__set(prop, null);
+		return this.#_data[prop] ?? this.__set(prop, null);
 	}
 
 	__set (prop: string, val: ValidConfigValue | UnknownObject | object, save = true): ValidConfigValue {
