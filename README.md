@@ -21,6 +21,9 @@ field.__getBoolean(key: string): boolean;
 field.__getField(key: string): ConfigField;
 field.__getArray(key: string): ConfigArray;
 
+field.__force<type>(key: string): <type>;
+// same as __get<type>, but overwrites the type saved in the config
+
 field.array: ConfigArray;
 
 field.__save(): void;

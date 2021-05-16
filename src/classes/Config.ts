@@ -94,6 +94,26 @@ class Config extends ConfigField {
 		return this.__getField(prop).array;
 	}
 
+	__forceField (prop: string): ConfigField {
+		return this.#_data.__forceField(prop);
+	}
+
+	__forceString (prop: string): string {
+		return this.#_data.__forceString(prop);
+	}
+
+	__forceNumber (prop: string): number {
+		return this.#_data.__forceNumber(prop);
+	}
+
+	__forceBoolean (prop: string): boolean {
+		return this.#_data.__forceBoolean(prop);
+	}
+
+	__forceArray (prop: string): ConfigArray {
+		return this.#_data.__forceArray(prop);
+	}
+
 	__has (prop: string): boolean {
 		return (prop in this.#_data);
 	}

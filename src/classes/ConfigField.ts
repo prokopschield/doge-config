@@ -81,8 +81,7 @@ class ConfigField {
 		if (val instanceof ConfigField) {
 			return val;
 		} else {
-			this.__set(prop, val ? { data: val } : {});
-			return this.__getField(prop);
+			return this.__forceField(prop);
 		}
 	}
 
@@ -115,6 +114,50 @@ class ConfigField {
 
 	__getArray (prop: string): ConfigArray {
 		return this.__getField(prop).array;
+	}
+
+	__forceField (prop: string): ConfigField {
+		const field = this.__get(prop);
+		if (field instanceof ConfigField) {
+			return field;
+		} else {
+			this.__set(prop, field ? { data: field } : {});
+			return this.__getField(prop);
+		}
+	}
+
+	__forceString (prop: string): string {
+		const val = this.__get(prop);
+		if (typeof val !== 'string') {
+			if (typeof val === 'object') {
+				this.__set(prop, JSON.stringify(val));
+			} else if (val) {
+				this.__set(prop, '' + val);
+			} else {
+				this.__set(prop, '');
+			}
+			return this.__forceString(prop);
+		} else return val;
+	}
+
+	__forceNumber (prop: string): number {
+		const val = this.__get(prop);
+		if ((typeof val !== 'number') || !(val > -Infinity)) {
+			this.__set(prop, (val && +val) || 0);
+			return this.__forceNumber(prop);
+		} else return val;
+	}
+
+	__forceBoolean (prop: string): boolean {
+		const val = this.__get(prop);
+		if (typeof val !== 'boolean') {
+			this.__set(prop, !!val);
+			return this.__forceBoolean(prop);
+		} else return val;
+	}
+
+	__forceArray (prop: string): ConfigArray {
+		return this.__forceField(prop).array;
 	}
 
 	__has (prop: string): boolean {

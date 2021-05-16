@@ -17,6 +17,11 @@ declare class ConfigField {
     __getNumber(prop: string): number;
     __getBoolean(prop: string): boolean;
     __getArray(prop: string): ConfigArray;
+    __forceField(prop: string): ConfigField;
+    __forceString(prop: string): string;
+    __forceNumber(prop: string): number;
+    __forceBoolean(prop: string): boolean;
+    __forceArray(prop: string): ConfigArray;
     __has(prop: string): boolean;
     __setDefault(...initArray: Array<any>): void;
 }
