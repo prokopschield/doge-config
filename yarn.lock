@@ -7,13 +7,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.0.2.tgz#51e9c0920d1b45936ea04341aa3e2e58d339fb67"
   integrity sha512-p68+a+KoxpoB47015IeYZYRrdqMUcpbK8re/zpFB8Ld46LHC1lPEbp3EXgkEhAYEcPvjJF6ZO+869SQ0aH1dcA==
 
-doge-config@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/doge-config/-/doge-config-0.1.0.tgz#ff4979ac20b0cd2ef812c4e05b3c42efc5ffd4bf"
-  integrity sha512-Zp+TDIsuRhmwxW9aSVDbT1bmFnhA03ku97nUU2oLy2rGTOMUdCLy7wYEs0kxgsPL9yiON8Kd/6OLgjqNfWyDYA==
-  dependencies:
-    doge-json "^1.0.2"
-
 doge-json@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.0.2.tgz#65b316b6fa429e7396c4dc777ec5d1b53daf16d0"
