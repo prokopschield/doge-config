@@ -129,30 +129,33 @@ class ConfigField {
 	__forceString (prop: string): string {
 		const val = this.__get(prop);
 		if (typeof val !== 'string') {
+			let ret: string;
 			if (typeof val === 'object') {
-				this.__set(prop, JSON.stringify(val));
+				this.__set(prop, ret = JSON.stringify(val));
 			} else if (val) {
-				this.__set(prop, '' + val);
+				this.__set(prop, ret = '' + val);
 			} else {
-				this.__set(prop, '');
+				this.__set(prop, ret = '');
 			}
-			return this.__forceString(prop);
+			return ret;
 		} else return val;
 	}
 
 	__forceNumber (prop: string): number {
 		const val = this.__get(prop);
 		if ((typeof val !== 'number') || !(val > -Infinity)) {
-			this.__set(prop, (val && +val) || 0);
-			return this.__forceNumber(prop);
+			let ret: number;
+			this.__set(prop, ret = (val && +val) || 0);
+			return ret;
 		} else return val;
 	}
 
 	__forceBoolean (prop: string): boolean {
 		const val = this.__get(prop);
 		if (typeof val !== 'boolean') {
-			this.__set(prop, !!val);
-			return this.__forceBoolean(prop);
+			let ret: boolean;
+			this.__set(prop, ret = !!val);
+			return ret;
 		} else return val;
 	}
 
