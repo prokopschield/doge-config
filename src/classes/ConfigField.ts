@@ -37,7 +37,9 @@ class ConfigField {
 	}
 
 	__get (prop: string): ValidConfigValue {
-		return this.#_data[prop] ?? this.__set(prop, null, false);
+		if (prop in this.#_data) return this.#_data[prop];
+		if (prop in this) return this.__set(prop, Object.values(this)[Object.keys(this).indexOf(prop)], false);
+		return null;
 	}
 
 	__set (prop: string, val: ValidConfigValue | UnknownObject | object, save = true): ValidConfigValue {
@@ -51,7 +53,7 @@ class ConfigField {
 				return this.#_data[prop];
 			},
 			set (val: ValidConfigValue | UnknownObject | object) {
-				this.__set(prop, val);
+				this.__set(prop, val, true);
 			}
 		});
 		if (save) {
@@ -68,8 +70,8 @@ class ConfigField {
 		return this.__get(prop);
 	}
 
-	set (prop: string, val: ValidConfigValue | UnknownObject | object): ValidConfigValue {
-		return this.__set(prop, val);
+	set (prop: string, val: ValidConfigValue | UnknownObject | object, save?: boolean): ValidConfigValue {
+		return this.__set(prop, val, save);
 	}
 
 	has (prop: string): boolean {
@@ -121,7 +123,7 @@ class ConfigField {
 		if (field instanceof ConfigField) {
 			return field;
 		} else {
-			this.__set(prop, field ? { data: field } : {});
+			this.__set(prop, field ? { data: field } : {}, false);
 			return this.__getField(prop);
 		}
 	}
@@ -131,11 +133,11 @@ class ConfigField {
 		if (typeof val !== 'string') {
 			let ret: string;
 			if (typeof val === 'object') {
-				this.__set(prop, ret = JSON.stringify(val));
+				this.__set(prop, ret = JSON.stringify(val), false);
 			} else if (val) {
-				this.__set(prop, ret = '' + val);
+				this.__set(prop, ret = '' + val, false);
 			} else {
-				this.__set(prop, ret = '');
+				this.__set(prop, ret = '', false);
 			}
 			return ret;
 		} else return val;
@@ -145,7 +147,7 @@ class ConfigField {
 		const val = this.__get(prop);
 		if ((typeof val !== 'number') || !(val > -Infinity)) {
 			let ret: number;
-			this.__set(prop, ret = (val && +val) || 0);
+			this.__set(prop, ret = (val && +val) || 0, false);
 			return ret;
 		} else return val;
 	}
@@ -154,7 +156,7 @@ class ConfigField {
 		const val = this.__get(prop);
 		if (typeof val !== 'boolean') {
 			let ret: boolean;
-			this.__set(prop, ret = !!val);
+			this.__set(prop, ret = !!val, false);
 			return ret;
 		} else return val;
 	}
