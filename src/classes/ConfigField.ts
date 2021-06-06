@@ -16,23 +16,18 @@ const proxies = {
 }
 
 declare interface ConfigField {
-	// @ts-expect-error
 	data: {
 		[index: string]: ValidConfigValue;
 	}
-	// @ts-expect-error
 	bool: {
 		[index: string]: boolean;
 	}
-	// @ts-expect-error
 	str: {
 		[index: string]: string;
 	}
-	// @ts-expect-error
 	num: {
 		[index: string]: number;
 	}
-	// @ts-expect-error
 	obj: {
 		[index: string]: ConfigField;
 	}
@@ -46,6 +41,73 @@ class ConfigField {
 				this.__set(prop, data[prop], false);
 			}
 		}
+		Object.defineProperties(this, {
+			data: {
+				get () {
+					return proxies.data.get(this) || proxies.data.set(this, new Proxy(this, {
+						get (field, prop, proxy) {
+							return field.__get(prop.toString());
+						},
+						set (field, prop, val, proxy) {
+							field.__set(prop.toString(), val);
+							return true;
+						},
+					})).get(this);
+				},
+			},
+			bool: {
+				get () {
+					return proxies.bool.get(this) || proxies.bool.set(this, new Proxy(this, {
+						get (field, prop, proxy) {
+							return field.__getBoolean(prop.toString());
+						},
+						set (field, prop, val, proxy) {
+							field.__set(prop.toString(), !!val);
+							return true;
+						},
+					})).get(this);
+				},
+			},
+			str: {
+				get () {
+					return proxies.str.get(this) || proxies.str.set(this, new Proxy(this, {
+						get (field, prop, proxy) {
+							return field.__getString(prop.toString());
+						},
+						set (field, prop, val, proxy) {
+							field.__set(prop.toString(), val.toString());
+							return true;
+						},
+					})).get(this);
+				},
+			},
+			num: {
+				get () {
+					return proxies.num.get(this) || proxies.num.set(this, new Proxy(this, {
+						get (field, prop, proxy) {
+							return field.__getNumber(prop.toString());
+						},
+						set (field, prop, val, proxy) {
+							field.__set(prop.toString(), +val);
+							return true;
+						},
+					})).get(this);
+				},
+			},
+			obj: {
+				get () {
+					return proxies.obj.get(this) || proxies.obj.set(this, new Proxy(this, {
+						get (field, prop, proxy) {
+							return field.__getField(prop.toString());
+						},
+						set (field, prop, val, proxy) {
+							field.__set(prop.toString(), val);
+							return true;
+						},
+					})).get(this);
+				},
+			},
+		});
 	}
 
 	#_array?: ConfigArray;
@@ -55,71 +117,6 @@ class ConfigField {
 		} else {
 			return this.#_array = new ConfigArray(this);
 		}
-	}
-
-	// @ts-expect-error
-	get data () {
-		return proxies.data.get(this) || proxies.data.set(this, new Proxy(this, {
-			get (field, prop, proxy) {
-				return field.__get(prop.toString());
-			},
-			set (field, prop, val, proxy) {
-				field.__set(prop.toString(), val);
-				return true;
-			},
-		})).get(this);
-	}
-
-	// @ts-expect-error
-	get bool () {
-		return proxies.bool.get(this) || proxies.bool.set(this, new Proxy(this, {
-			get (field, prop, proxy) {
-				return field.__getBoolean(prop.toString());
-			},
-			set (field, prop, val, proxy) {
-				field.__set(prop.toString(), !!val);
-				return true;
-			},
-		})).get(this);
-	}
-
-	// @ts-expect-error
-	get str () {
-		return proxies.str.get(this) || proxies.str.set(this, new Proxy(this, {
-			get (field, prop, proxy) {
-				return field.__getString(prop.toString());
-			},
-			set (field, prop, val, proxy) {
-				field.__set(prop.toString(), val.toString());
-				return true;
-			},
-		})).get(this);
-	}
-
-	// @ts-expect-error
-	get num () {
-		return proxies.num.get(this) || proxies.num.set(this, new Proxy(this, {
-			get (field, prop, proxy) {
-				return field.__getNumber(prop.toString());
-			},
-			set (field, prop, val, proxy) {
-				field.__set(prop.toString(), +val);
-				return true;
-			},
-		})).get(this);
-	}
-
-	// @ts-expect-error
-	get obj () {
-		return proxies.obj.get(this) || proxies.obj.set(this, new Proxy(this, {
-			get (field, prop, proxy) {
-				return field.__getField(prop.toString());
-			},
-			set (field, prop, val, proxy) {
-				field.__set(prop.toString(), val);
-				return true;
-			},
-		})).get(this);
 	}
 
 	get map (): ConfigMap {
