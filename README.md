@@ -27,6 +27,9 @@ field.__force<type>(key: string): <type>;
 // Array-like accessor
 field.array: ConfigArray;
 
+// Map-like accessor
+field.map: ConfigMap
+
 // Type-safe object-like accessors
 field.data: { [key]: any }
 field.bool: { [key]: boolean }
