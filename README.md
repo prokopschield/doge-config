@@ -24,7 +24,15 @@ field.__getArray(key: string): ConfigArray;
 field.__force<type>(key: string): <type>;
 // same as __get<type>, but overwrites the type saved in the config
 
+// Array-like accessor
 field.array: ConfigArray;
+
+// Type-safe object-like accessors
+field.data: { [key]: any }
+field.bool: { [key]: boolean }
+field.str: { [key]: string }
+field.num: { [key]: number }
+field.obj: { [key]: ConfigField }
 
 field.__save(): void;
 ```
