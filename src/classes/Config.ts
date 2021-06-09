@@ -12,9 +12,6 @@ class Config extends ConfigField {
 		super(null, null);
 		name = normalizeConfigName(name);
 		this.#_file = path.resolve('.', 'config', name + '.json');
-		if (!fs.existsSync('./config')) {
-			fs.mkdirSync('./config');
-		}
 		const data = read(this.#_file);
 		this.#_data = new ConfigField(this, null);
 		this.#_data.__setDefault(data || {}, defaults || {});
