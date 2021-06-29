@@ -1,9 +1,10 @@
-function normalizeConfigName (name: string) {
-	return name
-		.toLowerCase()
-		.replace(/\.json/gi, '')
-		.replace(/[^a-z0-9]+/, '-')
-		|| 'invalid'
+function normalizeConfigName(name: string) {
+	return (
+		name
+			.toLowerCase()
+			.replace(/\.json/gi, '')
+			.replace(/[^a-z0-9]+/, '-') || 'invalid'
+	);
 }
 
 export default normalizeConfigName;

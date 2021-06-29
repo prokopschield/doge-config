@@ -13,9 +13,7 @@ export {
 	Config,
 	ConfigArray,
 	ConfigField,
-
 	getConfig,
 	normalizeConfigName,
-	
 	types,
-}
+};

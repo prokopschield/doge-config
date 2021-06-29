@@ -3,8 +3,8 @@ import normalizeConfigName from './normalizeConfigName';
 
 const configs = new Map<string, Config>();
 
-function getConfig (name: string, defaults?: object): Config {
-	name = normalizeConfigName(name)
+function getConfig(name: string, defaults?: object): Config {
+	name = normalizeConfigName(name);
 	const config = configs.get(name);
 	if (config) {
 		return config;

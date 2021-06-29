@@ -2,7 +2,7 @@
 
 ## What is this?
 
-### It is the *easiest* way to read/write to a config file.
+### It is the _easiest_ way to read/write to a config file.
 
 ### It provides optional type-safe accessors.
 

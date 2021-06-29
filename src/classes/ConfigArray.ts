@@ -1,31 +1,28 @@
-import {
-	ConfigField,
-	types,
-} from '..';
+import { ConfigField, types } from '..';
 
 export default class ConfigArray extends Array<types.ValidConfigValue> {
-	constructor (field: ConfigField) {
+	constructor(field: ConfigField) {
 		super(...Object.values(field));
 		this.#_field = field;
 	}
 	#_field: ConfigField;
-	__save () {
+	__save() {
 		let index = -1;
 		const keys = Object.keys(this.#_field);
 		for (const val of this) {
 			this.#_field.__set(keys[++index] || index.toString(), val, false);
 		}
-		for (; index < keys.length;) {
+		for (; index < keys.length; ) {
 			const key = keys[++index];
 			Object.defineProperty(this.#_field, key, {
 				configurable: true,
 				enumerable: false,
-				get () {
+				get() {
 					return undefined;
 				},
-				set (val: types.ValidConfigValue | types.UnknownObject | object) {
+				set(val: types.ValidConfigValue | types.UnknownObject | object) {
 					this.__set(key, val);
-				}
+				},
 			});
 		}
 		this.#_field.save();
@@ -68,7 +65,7 @@ const methods = [
 for (const method of methods) {
 	Object.assign(ConfigArray.prototype, {
 		[method]: function (...args: any[]) {
-			const result = (((Array as any).prototype[method]).call(this, ...args));
+			const result = (Array as any).prototype[method].call(this, ...args);
 			if (result instanceof ConfigArray) {
 				Object.assign(this, result);
 				this.__save();
@@ -76,15 +73,13 @@ for (const method of methods) {
 			}
 			this.__save();
 			return result;
-		}
+		},
 	});
 }
 
 module.exports = ConfigArray;
 
-export {
-	ConfigArray,
-}
+export { ConfigArray };
 
 Object.assign(ConfigArray, {
 	default: ConfigArray,
