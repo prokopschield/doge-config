@@ -1,5 +1,4 @@
 import { read, write } from 'doge-json';
-import { fs } from 'doge-json';
 import path from 'path';
 import ConfigArray from './ConfigArray';
 import ConfigField from './ConfigField';
@@ -7,10 +6,10 @@ import normalizeConfigName from '../utils/normalizeConfigName';
 import { UnknownObject, ValidConfigValue } from '../types';
 
 class Config extends ConfigField {
-	constructor(name: string, defaults?: object) {
+	constructor(name: string, defaults?: object, confdir = 'config') {
 		super(null, null);
 		name = normalizeConfigName(name);
-		this.#_file = path.resolve('.', 'config', name + '.json');
+		this.#_file = path.resolve('.', confdir, name + '.json');
 		const data = read(this.#_file);
 		this.#_data = new ConfigField(this, null);
 		this.#_data.__setDefault(data || {}, defaults || {});
