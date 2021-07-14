@@ -345,6 +345,14 @@ class ConfigField {
 			}
 		}
 	}
+
+	toJSON() {
+		if (this.#_array) {
+			return [...this.#_array];
+		} else {
+			return { ...this.#_data };
+		}
+	}
 }
 
 export default ConfigField;
