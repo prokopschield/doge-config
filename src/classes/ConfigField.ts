@@ -166,10 +166,10 @@ class ConfigField {
 	} = {};
 
 	__save(): void {
-		this.#_parent?.__save();
 		if (this.#_array) {
 			Object.assign(this.#_array, Object.values(this));
 		}
+		this.#_parent?.__save();
 	}
 
 	__get(prop: string): ValidConfigValue {
@@ -332,6 +332,9 @@ class ConfigField {
 								: (this.__set(prop, { data: candidate }, false),
 								  this.__getField(prop));
 						field.__setDefault(val);
+						if (val instanceof Array) {
+							field.array;
+						}
 					} else {
 						if (!this.__has(prop)) {
 							this.__set(prop, val, false);
