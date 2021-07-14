@@ -341,6 +341,9 @@ class ConfigField {
 						}
 					}
 				}
+				if (init instanceof Array) {
+					this.array;
+				}
 			} else if (init) {
 				if (!this.__has('data')) {
 					this.__set('data', init, false);

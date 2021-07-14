@@ -124,6 +124,10 @@ class Config extends ConfigField {
 	__setDefault(...initArray: Array<any>): void {
 		this.#_data.__setDefault(...initArray);
 	}
+
+	toJSON() {
+		return this.#_data.toJSON();
+	}
 }
 
 export default Config;
