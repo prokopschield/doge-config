@@ -21,6 +21,6 @@
 	},
 	"homepage": "https://github.com/prokopschield/doge-config#readme",
 	"dependencies": {
-		"doge-json": "^1.0.4"
+		"doge-json": "^1.1.0-3"
 	}
 }
