@@ -1,9 +1,10 @@
-import { read, write } from 'doge-json';
+import { read } from 'doge-json';
 import path from 'path';
 import ConfigArray from './ConfigArray';
 import ConfigField from './ConfigField';
 import normalizeConfigName from '../utils/normalizeConfigName';
 import { UnknownObject, ValidConfigValue } from '../types';
+import writeConfig from '../utils/writeConfig';
 
 class Config extends ConfigField {
 	constructor(name: string, defaults?: object, confdir = 'config') {
@@ -38,7 +39,7 @@ class Config extends ConfigField {
 	}
 
 	__save(): void {
-		write(this.#_file, this.#_data);
+		writeConfig(this.#_file, this.#_data);
 		this.__update();
 	}
 

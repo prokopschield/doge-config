@@ -5,3 +5,16 @@ export type ValidConfigValue = ConfigField | string | number | boolean | null;
 export type UnknownObject = {
 	[prop: string]: UnknownObject | ValidConfigValue;
 };
+
+export type ReadValue =
+	| string
+	| number
+	| boolean
+	| null
+	| undefined
+	| Array<ReadValue>
+	| ReadObject;
+
+export type ReadObject = {
+	[key: string]: ReadValue;
+};

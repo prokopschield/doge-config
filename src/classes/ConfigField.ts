@@ -149,11 +149,11 @@ class ConfigField {
 
 	#_array?: ConfigArray;
 	get array(): ConfigArray {
-		if (this.#_array) {
-			return this.#_array;
-		} else {
-			return (this.#_array = new ConfigArray(this));
-		}
+		return this.#_array || (this.#_array = new ConfigArray(this));
+	}
+
+	get is_array(): ConfigArray | undefined {
+		return this.#_array;
 	}
 
 	get map(): ConfigMap {
