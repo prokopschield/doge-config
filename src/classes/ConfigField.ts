@@ -1,6 +1,6 @@
 import Config from './Config';
 import ConfigArray from './ConfigArray';
-import { UnknownObject, ValidConfigValue } from '../types';
+import { Flattened, UnknownObject, ValidConfigValue } from '../types';
 import ConfigMap from './ConfigMap';
 import { getMap } from './ConfigMap';
 
@@ -357,6 +357,21 @@ class ConfigField {
 			return [...this.#_array];
 		} else {
 			return { ...this.#_data };
+		}
+	}
+
+	get flat(): Flattened {
+		const array = this.#_array;
+		if (array) {
+			return [...array].map((a) => (a instanceof ConfigField ? a.flat : a));
+		} else {
+			const ret: {
+				[key: string]: Flattened;
+			} = {};
+			for (const [key, value] of this.map.entries()) {
+				ret[key] = value instanceof ConfigField ? value.flat : value;
+			}
+			return ret;
 		}
 	}
 }
