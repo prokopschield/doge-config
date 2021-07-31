@@ -6,7 +6,7 @@ import normalizeConfigName from '../utils/normalizeConfigName';
 import { UnknownObject, ValidConfigValue } from '../types';
 import writeConfig from '../utils/writeConfig';
 
-class Config extends ConfigField {
+export class Config extends ConfigField {
 	constructor(name: string, defaults?: object, confdir = 'config') {
 		super(null, null);
 		name = normalizeConfigName(name);
@@ -134,7 +134,7 @@ class Config extends ConfigField {
 export default Config;
 module.exports = Config;
 
-Object.assign(Config, {
-	default: Config,
-	Config,
+Object.defineProperties(Config, {
+	default: { get: () => Config },
+	Config: { get: () => Config },
 });

@@ -1,6 +1,7 @@
-import { ConfigField, types } from '..';
+import { ConfigField } from '../classes/ConfigField';
+import * as types from '../types';
 
-export default class ConfigArray extends Array<types.ValidConfigValue> {
+export class ConfigArray extends Array<types.ValidConfigValue> {
 	constructor(field: ConfigField) {
 		super(...Object.values(field));
 		this.#_field = field;
@@ -77,11 +78,10 @@ for (const method of methods) {
 	});
 }
 
+export default ConfigArray;
 module.exports = ConfigArray;
 
-export { ConfigArray };
-
-Object.assign(ConfigArray, {
-	default: ConfigArray,
-	ConfigArray,
+Object.defineProperties(ConfigArray, {
+	default: { get: () => ConfigArray },
+	ConfigArray: { get: () => ConfigArray },
 });

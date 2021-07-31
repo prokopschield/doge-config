@@ -15,7 +15,8 @@ export function getConfigDir(name: string, defaults?: object): ConfigDir {
 	}
 }
 
-export default module.exports = getConfigDir;
+export default getConfigDir;
+module.exports = getConfigDir;
 
 Object.defineProperties(getConfigDir, {
 	default: { get: () => getConfigDir },

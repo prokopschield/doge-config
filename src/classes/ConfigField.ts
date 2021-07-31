@@ -12,7 +12,7 @@ const proxies = {
 	obj: new WeakMap<ConfigField, ConfigField>(),
 };
 
-declare interface ConfigField {
+export declare interface ConfigField {
 	data: {
 		[index: string]: ValidConfigValue;
 	};
@@ -30,7 +30,7 @@ declare interface ConfigField {
 	};
 }
 
-class ConfigField {
+export class ConfigField {
 	constructor(parent: Config | ConfigField | null, data: UnknownObject | null) {
 		this.#_parent = parent;
 		if (data) {
@@ -379,7 +379,7 @@ class ConfigField {
 export default ConfigField;
 module.exports = ConfigField;
 
-Object.assign(ConfigField, {
-	default: ConfigField,
-	ConfigField,
+Object.defineProperties(ConfigField, {
+	default: { get: () => ConfigField },
+	ConfigField: { get: () => ConfigField },
 });

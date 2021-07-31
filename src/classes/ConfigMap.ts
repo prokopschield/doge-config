@@ -1,5 +1,5 @@
-import { ValidConfigValue } from '../types';
 import ConfigField from './ConfigField';
+import { ValidConfigValue } from '../types';
 
 const MapField = new WeakMap<ConfigMap, ConfigField>();
 const FieldMap = new WeakMap<ConfigField, ConfigMap>();
@@ -8,7 +8,7 @@ export function getMap(field: ConfigField): ConfigMap {
 	return FieldMap.get(field) || new ConfigMap(field);
 }
 
-class ConfigMap implements Map<string, ValidConfigValue> {
+export class ConfigMap implements Map<string, ValidConfigValue> {
 	constructor(field: ConfigField) {
 		MapField.set(this, field);
 		FieldMap.set(field, this);
@@ -100,10 +100,10 @@ class ConfigMap implements Map<string, ValidConfigValue> {
 }
 
 export default ConfigMap;
-module.exports = MapField;
+module.exports = ConfigMap;
 
-Object.assign(MapField, {
-	default: MapField,
-	MapField,
-	getMap,
+Object.defineProperties(ConfigMap, {
+	default: { get: () => ConfigMap },
+	MapField: { get: () => ConfigMap },
+	getMap: { get: () => getMap },
 });

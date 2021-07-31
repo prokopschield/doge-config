@@ -1,4 +1,4 @@
-function normalizeConfigName(name: string) {
+export function normalizeConfigName(name: string) {
 	return (
 		name
 			.toLowerCase()
@@ -10,7 +10,7 @@ function normalizeConfigName(name: string) {
 export default normalizeConfigName;
 module.exports = normalizeConfigName;
 
-Object.assign(normalizeConfigName, {
-	default: normalizeConfigName,
-	normalizeConfigName,
+Object.defineProperties(normalizeConfigName, {
+	default: { get: () => normalizeConfigName },
+	normalizeConfigName: { get: () => normalizeConfigName },
 });

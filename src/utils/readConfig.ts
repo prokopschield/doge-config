@@ -17,7 +17,7 @@ export function readConfig(config: ConfigField): ReadObject {
 export default readConfig;
 module.exports = readConfig;
 
-Object.assign(readConfig, {
-	default: readConfig,
-	readConfig,
+Object.defineProperties(readConfig, {
+	default: { get: () => readConfig },
+	writeConfig: { get: () => readConfig },
 });

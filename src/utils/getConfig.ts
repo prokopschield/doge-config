@@ -3,7 +3,7 @@ import normalizeConfigName from './normalizeConfigName';
 
 const configs = new Map<string, Config>();
 
-function getConfig(name: string, defaults?: object): Config {
+export function getConfig(name: string, defaults?: object): Config {
 	name = normalizeConfigName(name);
 	const config = configs.get(name);
 	if (config) {
@@ -18,7 +18,7 @@ function getConfig(name: string, defaults?: object): Config {
 export default getConfig;
 module.exports = getConfig;
 
-Object.assign(getConfig, {
-	default: getConfig,
-	getConfig,
+Object.defineProperties(getConfig, {
+	default: { get: () => getConfig },
+	getConfig: { get: () => getConfig },
 });
