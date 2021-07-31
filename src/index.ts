@@ -1,5 +1,6 @@
 import Config from './classes/Config';
 import ConfigArray from './classes/ConfigArray';
+import ConfigDir from './classes/ConfigDir';
 import ConfigField from './classes/ConfigField';
 
 import getConfig from './utils/getConfig';
@@ -12,6 +13,7 @@ export default Config;
 export {
 	Config,
 	ConfigArray,
+	ConfigDir,
 	ConfigField,
 	getConfig,
 	normalizeConfigName,
