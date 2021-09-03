@@ -31,7 +31,10 @@ export declare interface ConfigField {
 }
 
 export class ConfigField {
-	constructor(parent: Config | ConfigField | null, data: UnknownObject | null) {
+	constructor(
+		parent: Config | ConfigField | null,
+		data: UnknownObject | null
+	) {
 		this.#_parent = parent;
 		if (data) {
 			for (const prop in data) {
@@ -47,10 +50,10 @@ export class ConfigField {
 							.set(
 								this,
 								new Proxy(this, {
-									get(field, prop, proxy) {
+									get(field, prop, _proxy) {
 										return field.__get(prop.toString());
 									},
-									set(field, prop, val, proxy) {
+									set(field, prop, val, _proxy) {
 										field.__set(prop.toString(), val);
 										return true;
 									},
@@ -68,10 +71,12 @@ export class ConfigField {
 							.set(
 								this,
 								new Proxy(this, {
-									get(field, prop, proxy) {
-										return field.__getBoolean(prop.toString());
+									get(field, prop, _proxy) {
+										return field.__getBoolean(
+											prop.toString()
+										);
 									},
-									set(field, prop, val, proxy) {
+									set(field, prop, val, _proxy) {
 										field.__set(prop.toString(), !!val);
 										return true;
 									},
@@ -89,11 +94,16 @@ export class ConfigField {
 							.set(
 								this,
 								new Proxy(this, {
-									get(field, prop, proxy) {
-										return field.__getString(prop.toString());
+									get(field, prop, _proxy) {
+										return field.__getString(
+											prop.toString()
+										);
 									},
-									set(field, prop, val, proxy) {
-										field.__set(prop.toString(), val.toString());
+									set(field, prop, val, _proxy) {
+										field.__set(
+											prop.toString(),
+											val.toString()
+										);
 										return true;
 									},
 								})
@@ -110,10 +120,12 @@ export class ConfigField {
 							.set(
 								this,
 								new Proxy(this, {
-									get(field, prop, proxy) {
-										return field.__getNumber(prop.toString());
+									get(field, prop, _proxy) {
+										return field.__getNumber(
+											prop.toString()
+										);
 									},
-									set(field, prop, val, proxy) {
+									set(field, prop, val, _proxy) {
 										field.__set(prop.toString(), +val);
 										return true;
 									},
@@ -131,10 +143,12 @@ export class ConfigField {
 							.set(
 								this,
 								new Proxy(this, {
-									get(field, prop, proxy) {
-										return field.__getField(prop.toString());
+									get(field, prop, _proxy) {
+										return field.__getField(
+											prop.toString()
+										);
 									},
-									set(field, prop, val, proxy) {
+									set(field, prop, val, _proxy) {
 										field.__set(prop.toString(), val);
 										return true;
 									},
@@ -189,7 +203,9 @@ export class ConfigField {
 		save = true
 	): ValidConfigValue {
 		this.#_data[prop] =
-			typeof val === 'object' ? val && new ConfigField(this, { ...val }) : val;
+			typeof val === 'object'
+				? val && new ConfigField(this, { ...val })
+				: val;
 		Object.defineProperty(this, prop, {
 			configurable: true,
 			enumerable: true,
@@ -325,7 +341,8 @@ export class ConfigField {
 				for (const prop in init) {
 					const val: any = init[prop];
 					if (typeof val === 'object') {
-						const candidate = this.#_data[prop] || this.__set(prop, {}, false);
+						const candidate =
+							this.#_data[prop] || this.__set(prop, {}, false);
 						const field: ConfigField =
 							candidate instanceof ConfigField
 								? candidate
@@ -363,7 +380,9 @@ export class ConfigField {
 	get flat(): Flattened {
 		const array = this.#_array;
 		if (array) {
-			return [...array].map((a) => (a instanceof ConfigField ? a.flat : a));
+			return [...array].map((a) =>
+				a instanceof ConfigField ? a.flat : a
+			);
 		} else {
 			const ret: {
 				[key: string]: Flattened;

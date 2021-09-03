@@ -28,7 +28,7 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
 	}
 	clear() {
 		const field = this.field;
-		field.array.filter((a) => false);
+		field.array.filter((_a) => false);
 		return field;
 	}
 	delete(prop: string | Symbol) {

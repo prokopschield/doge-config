@@ -21,7 +21,7 @@ export class Config extends ConfigField {
 	#_data: ConfigField;
 
 	__update(): void {
-		for (const [prop, data] of Object.entries(this.#_data)) {
+		for (const prop of Object.keys(this.#_data)) {
 			if (prop in this) {
 			} else {
 				Object.defineProperty(this, prop, {

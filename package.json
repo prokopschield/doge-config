@@ -1,7 +1,7 @@
 {
 	"name": "doge-config",
 	"description": "One-line config file, or more",
-	"version": "0.3.12",
+	"version": "0.3.13",
 	"main": "lib/index",
 	"author": "Prokop Schield",
 	"license": "GPL-3.0-or-later",
