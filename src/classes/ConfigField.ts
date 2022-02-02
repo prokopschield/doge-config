@@ -4,32 +4,6 @@ import ConfigArray from './ConfigArray';
 import ConfigMap from './ConfigMap';
 import { getMap } from './ConfigMap';
 
-const proxies = {
-    data: new WeakMap<ConfigField, ConfigField>(),
-    num: new WeakMap<ConfigField, ConfigField>(),
-    str: new WeakMap<ConfigField, ConfigField>(),
-    bool: new WeakMap<ConfigField, ConfigField>(),
-    obj: new WeakMap<ConfigField, ConfigField>(),
-};
-
-export declare interface ConfigField {
-    data: {
-        [index: string]: ValidConfigValue;
-    };
-    bool: {
-        [index: string]: boolean;
-    };
-    str: {
-        [index: string]: string;
-    };
-    num: {
-        [index: string]: number;
-    };
-    obj: {
-        [index: string]: ConfigField;
-    };
-}
-
 export class ConfigField {
     constructor(
         parent: Config | ConfigField | null,
@@ -42,134 +16,52 @@ export class ConfigField {
                 this.__set(property, data[property], false);
             }
         }
+    }
 
-        Object.defineProperties(this, {
-            data: {
-                get() {
-                    return (
-                        proxies.data.get(this) ||
-                        proxies.data
-                            .set(
-                                this,
-                                new Proxy(this, {
-                                    get(field, property, _proxy) {
-                                        return field.__get(property.toString());
-                                    },
-                                    set(field, property, value, _proxy) {
-                                        field.__set(property.toString(), value);
-
-                                        return true;
-                                    },
-                                })
-                            )
-                            .get(this)
-                    );
-                },
+    __getTypedProxy<T extends ValidConfigValue>(
+        typeConstructor: (arg: ValidConfigValue) => T
+    ): {
+        [key: string]: T;
+    } {
+        return new Proxy(this as any, {
+            get(target: ConfigField, key) {
+                return typeConstructor(target.__get(String(key)));
             },
-            bool: {
-                get() {
-                    return (
-                        proxies.bool.get(this) ||
-                        proxies.bool
-                            .set(
-                                this,
-                                new Proxy(this, {
-                                    get(field, property, _proxy) {
-                                        return field.__getBoolean(
-                                            property.toString()
-                                        );
-                                    },
-                                    set(field, property, value, _proxy) {
-                                        field.__set(
-                                            property.toString(),
-                                            !!value
-                                        );
+            set(target: ConfigField, key, value: ValidConfigValue) {
+                target.__set(String(key), typeConstructor(value));
 
-                                        return true;
-                                    },
-                                })
-                            )
-                            .get(this)
-                    );
-                },
+                return true;
             },
-            str: {
-                get() {
-                    return (
-                        proxies.str.get(this) ||
-                        proxies.str
-                            .set(
-                                this,
-                                new Proxy(this, {
-                                    get(field, property, _proxy) {
-                                        return field.__getString(
-                                            property.toString()
-                                        );
-                                    },
-                                    set(field, property, value, _proxy) {
-                                        field.__set(
-                                            property.toString(),
-                                            value.toString()
-                                        );
+        });
+    }
 
-                                        return true;
-                                    },
-                                })
-                            )
-                            .get(this)
-                    );
-                },
+    get data() {
+        return this.__getTypedProxy((a) => a);
+    }
+
+    get bool() {
+        return this.__getTypedProxy(Boolean);
+    }
+
+    get str() {
+        return this.__getTypedProxy(String);
+    }
+
+    get num() {
+        return this.__getTypedProxy(Number);
+    }
+
+    get obj(): {
+        [key: string]: ConfigField;
+    } {
+        return new Proxy(this as any, {
+            get(field, property, _proxy) {
+                return field.__getField(property.toString());
             },
-            num: {
-                get() {
-                    return (
-                        proxies.num.get(this) ||
-                        proxies.num
-                            .set(
-                                this,
-                                new Proxy(this, {
-                                    get(field, property, _proxy) {
-                                        return field.__getNumber(
-                                            property.toString()
-                                        );
-                                    },
-                                    set(field, property, value, _proxy) {
-                                        field.__set(
-                                            property.toString(),
-                                            +value
-                                        );
+            set(field, property, value, _proxy) {
+                field.__set(property.toString(), value);
 
-                                        return true;
-                                    },
-                                })
-                            )
-                            .get(this)
-                    );
-                },
-            },
-            obj: {
-                get() {
-                    return (
-                        proxies.obj.get(this) ||
-                        proxies.obj
-                            .set(
-                                this,
-                                new Proxy(this, {
-                                    get(field, property, _proxy) {
-                                        return field.__getField(
-                                            property.toString()
-                                        );
-                                    },
-                                    set(field, property, value, _proxy) {
-                                        field.__set(property.toString(), value);
-
-                                        return true;
-                                    },
-                                })
-                            )
-                            .get(this)
-                    );
-                },
+                return true;
             },
         });
     }
