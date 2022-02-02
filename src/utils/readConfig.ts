@@ -7,9 +7,9 @@ export function readConfig(config: ConfigField): ReadObject {
     for (const [key, value] of Object.entries(config)) {
         returnValue_object[key] =
             value instanceof ConfigField
-                ? (value.is_array
+                ? value.is_array
                     ? Object.values(readConfig(value))
-                    : readConfig(value))
+                    : readConfig(value)
                 : value;
     }
 
