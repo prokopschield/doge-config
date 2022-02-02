@@ -1,6 +1,6 @@
+import { Flattened, UnknownObject, ValidConfigValue } from '../types';
 import Config from './Config';
 import ConfigArray from './ConfigArray';
-import { Flattened, UnknownObject, ValidConfigValue } from '../types';
 import ConfigMap from './ConfigMap';
 import { getMap } from './ConfigMap';
 
@@ -36,11 +36,13 @@ export class ConfigField {
         data: UnknownObject | null
     ) {
         this.#_parent = parent;
+
         if (data) {
-            for (const prop in data) {
-                this.__set(prop, data[prop], false);
+            for (const property in data) {
+                this.__set(property, data[property], false);
             }
         }
+
         Object.defineProperties(this, {
             data: {
                 get() {
@@ -50,11 +52,12 @@ export class ConfigField {
                             .set(
                                 this,
                                 new Proxy(this, {
-                                    get(field, prop, _proxy) {
-                                        return field.__get(prop.toString());
+                                    get(field, property, _proxy) {
+                                        return field.__get(property.toString());
                                     },
-                                    set(field, prop, val, _proxy) {
-                                        field.__set(prop.toString(), val);
+                                    set(field, property, value, _proxy) {
+                                        field.__set(property.toString(), value);
+
                                         return true;
                                     },
                                 })
@@ -71,13 +74,17 @@ export class ConfigField {
                             .set(
                                 this,
                                 new Proxy(this, {
-                                    get(field, prop, _proxy) {
+                                    get(field, property, _proxy) {
                                         return field.__getBoolean(
-                                            prop.toString()
+                                            property.toString()
                                         );
                                     },
-                                    set(field, prop, val, _proxy) {
-                                        field.__set(prop.toString(), !!val);
+                                    set(field, property, value, _proxy) {
+                                        field.__set(
+                                            property.toString(),
+                                            !!value
+                                        );
+
                                         return true;
                                     },
                                 })
@@ -94,16 +101,17 @@ export class ConfigField {
                             .set(
                                 this,
                                 new Proxy(this, {
-                                    get(field, prop, _proxy) {
+                                    get(field, property, _proxy) {
                                         return field.__getString(
-                                            prop.toString()
+                                            property.toString()
                                         );
                                     },
-                                    set(field, prop, val, _proxy) {
+                                    set(field, property, value, _proxy) {
                                         field.__set(
-                                            prop.toString(),
-                                            val.toString()
+                                            property.toString(),
+                                            value.toString()
                                         );
+
                                         return true;
                                     },
                                 })
@@ -120,13 +128,17 @@ export class ConfigField {
                             .set(
                                 this,
                                 new Proxy(this, {
-                                    get(field, prop, _proxy) {
+                                    get(field, property, _proxy) {
                                         return field.__getNumber(
-                                            prop.toString()
+                                            property.toString()
                                         );
                                     },
-                                    set(field, prop, val, _proxy) {
-                                        field.__set(prop.toString(), +val);
+                                    set(field, property, value, _proxy) {
+                                        field.__set(
+                                            property.toString(),
+                                            +value
+                                        );
+
                                         return true;
                                     },
                                 })
@@ -143,13 +155,14 @@ export class ConfigField {
                             .set(
                                 this,
                                 new Proxy(this, {
-                                    get(field, prop, _proxy) {
+                                    get(field, property, _proxy) {
                                         return field.__getField(
-                                            prop.toString()
+                                            property.toString()
                                         );
                                     },
-                                    set(field, prop, val, _proxy) {
-                                        field.__set(prop.toString(), val);
+                                    set(field, property, value, _proxy) {
+                                        field.__set(property.toString(), value);
+
                                         return true;
                                     },
                                 })
@@ -183,214 +196,243 @@ export class ConfigField {
         if (this.#_array) {
             Object.assign(this.#_array, Object.values(this));
         }
+
         this.#_parent?.__save();
     }
 
-    __get(prop: string): ValidConfigValue {
-        if (prop in this.#_data) return this.#_data[prop];
-        if (prop in this)
+    __get(property: string): ValidConfigValue {
+        if (property in this.#_data) return this.#_data[property];
+
+        if (property in this)
             return this.__set(
-                prop,
-                Object.values(this)[Object.keys(this).indexOf(prop)],
+                property,
+                Object.values(this)[Object.keys(this).indexOf(property)],
                 false
             );
+
         return null;
     }
 
     __set(
-        prop: string,
-        val: ValidConfigValue | UnknownObject | object,
+        property: string,
+        value: ValidConfigValue | UnknownObject | object,
         save = true
     ): ValidConfigValue {
-        this.#_data[prop] =
-            typeof val === 'object'
-                ? val && new ConfigField(this, { ...val })
-                : val;
-        Object.defineProperty(this, prop, {
+        this.#_data[property] =
+            typeof value === 'object'
+                ? value && new ConfigField(this, { ...value })
+                : value;
+        Object.defineProperty(this, property, {
             configurable: true,
             enumerable: true,
             get() {
-                return this.#_data[prop];
+                return this.#_data[property];
             },
-            set(val: ValidConfigValue | UnknownObject | object) {
-                this.__set(prop, val, true);
+            set(value: ValidConfigValue | UnknownObject | object) {
+                this.__set(property, value, true);
             },
         });
+
         if (save) {
             this.__save();
         }
-        return this.#_data[prop];
+
+        return this.#_data[property];
     }
 
     save(): void {
         return this.__save();
     }
 
-    get(prop: string): ValidConfigValue {
-        return this.__get(prop);
+    get(property: string): ValidConfigValue {
+        return this.__get(property);
     }
 
     set(
-        prop: string,
-        val: ValidConfigValue | UnknownObject | object,
+        property: string,
+        value: ValidConfigValue | UnknownObject | object,
         save?: boolean
     ): ValidConfigValue {
-        return this.__set(prop, val, save);
+        return this.__set(property, value, save);
     }
 
-    has(prop: string): boolean {
-        return this.__has(prop);
+    has(property: string): boolean {
+        return this.__has(property);
     }
 
-    __getField(prop: string): ConfigField {
-        let val = this.__get(prop);
-        if (val instanceof ConfigField) {
-            return val;
-        } else {
-            return this.__forceField(prop);
-        }
+    __getField(property: string): ConfigField {
+        const value = this.__get(property);
+
+        return value instanceof ConfigField
+            ? value
+            : this.__forceField(property);
     }
 
-    __getString(prop: string): string {
-        let val = this.__get(prop);
-        if (!val) {
+    __getString(property: string): string {
+        const value = this.__get(property);
+
+        if (!value) {
             return '';
-        } else if (typeof val === 'string') {
-            return val;
-        } else if (typeof val === 'object') {
-            return Object.keys(val).length
-                ? JSON.stringify(val, null, '\t') + '\n'
+        } else if (typeof value === 'string') {
+            return value;
+        } else if (typeof value === 'object') {
+            return Object.keys(value).length > 0
+                ? JSON.stringify(value, null, '\t') + '\n'
                 : '';
         } else {
-            return val.toString();
+            return value.toString();
         }
     }
 
-    __getNumber(prop: string): number {
-        let val = this.__get(prop);
-        if (typeof val === 'number') {
-            return val;
-        } else return parseFloat(this.__getString(prop)) || 0;
+    __getNumber(property: string): number {
+        const value = this.__get(property);
+
+        return typeof value === 'number'
+            ? value
+            : Number.parseFloat(this.__getString(property)) || 0;
     }
 
-    __getBoolean(prop: string): boolean {
-        let val = this.__get(prop);
-        if (typeof val === 'object') {
-            return !!(val && Object.keys(val).length);
-        } else return !!val;
+    __getBoolean(property: string): boolean {
+        const value = this.__get(property);
+
+        return typeof value === 'object'
+            ? !!(value && Object.keys(value).length > 0)
+            : !!value;
     }
 
-    __getArray(prop: string): ConfigArray {
-        return this.__getField(prop).array;
+    __getArray(property: string): ConfigArray {
+        return this.__getField(property).array;
     }
 
-    __forceField(prop: string): ConfigField {
-        const field = this.__get(prop);
+    __forceField(property: string): ConfigField {
+        const field = this.__get(property);
+
         if (field instanceof ConfigField) {
             return field;
         } else {
-            this.__set(prop, field ? { data: field } : {}, false);
-            return this.__getField(prop);
+            this.__set(property, field ? { data: field } : {}, false);
+
+            return this.__getField(property);
         }
     }
 
-    __forceString(prop: string): string {
-        const val = this.__get(prop);
-        if (typeof val !== 'string') {
-            let ret: string;
-            if (typeof val === 'object') {
-                this.__set(prop, (ret = JSON.stringify(val)), false);
-            } else if (val) {
-                this.__set(prop, (ret = '' + val), false);
+    __forceString(property: string): string {
+        const value = this.__get(property);
+
+        if (typeof value !== 'string') {
+            let returnValue: string;
+
+            if (typeof value === 'object') {
+                this.__set(
+                    property,
+                    (returnValue = JSON.stringify(value)),
+                    false
+                );
+            } else if (value) {
+                this.__set(property, (returnValue = '' + value), false);
             } else {
-                this.__set(prop, (ret = ''), false);
+                this.__set(property, (returnValue = ''), false);
             }
-            return ret;
-        } else return val;
+
+            return returnValue;
+        } else return value;
     }
 
-    __forceNumber(prop: string): number {
-        const val = this.__get(prop);
-        if (typeof val !== 'number' || !(val > -Infinity)) {
-            let ret: number;
-            this.__set(prop, (ret = (val && +val) || 0), false);
-            return ret;
-        } else return val;
+    __forceNumber(property: string): number {
+        const value = this.__get(property);
+
+        if (typeof value !== 'number' || value <= Number.NEGATIVE_INFINITY) {
+            let returnValue: number;
+
+            this.__set(property, (returnValue = (value && +value) || 0), false);
+
+            return returnValue;
+        } else return value;
     }
 
-    __forceBoolean(prop: string): boolean {
-        const val = this.__get(prop);
-        if (typeof val !== 'boolean') {
-            let ret: boolean;
-            this.__set(prop, (ret = !!val), false);
-            return ret;
-        } else return val;
+    __forceBoolean(property: string): boolean {
+        const value = this.__get(property);
+
+        if (typeof value !== 'boolean') {
+            let returnValue: boolean;
+
+            this.__set(property, (returnValue = !!value), false);
+
+            return returnValue;
+        } else return value;
     }
 
-    __forceArray(prop: string): ConfigArray {
-        return this.__forceField(prop).array;
+    __forceArray(property: string): ConfigArray {
+        return this.__forceField(property).array;
     }
 
-    __has(prop: string): boolean {
-        return prop in this;
+    __has(property: string): boolean {
+        return property in this;
     }
 
     __setDefault(...initArray: Array<any>): void {
         for (const init of initArray) {
             if (init && typeof init === 'object') {
-                for (const prop in init) {
-                    const val: any = init[prop];
-                    if (typeof val === 'object') {
+                for (const property in init) {
+                    const value: any = init[property];
+
+                    if (typeof value === 'object') {
                         const candidate =
-                            this.#_data[prop] || this.__set(prop, {}, false);
+                            this.#_data[property] ||
+                            this.__set(property, {}, false);
                         const field: ConfigField =
                             candidate instanceof ConfigField
                                 ? candidate
-                                : (this.__set(prop, { data: candidate }, false),
-                                  this.__getField(prop));
-                        field.__setDefault(val);
-                        if (val instanceof Array) {
+                                : (this.__set(
+                                      property,
+                                      { data: candidate },
+                                      false
+                                  ),
+                                  this.__getField(property));
+
+                        field.__setDefault(value);
+
+                        if (Array.isArray(value)) {
                             field.array;
                         }
                     } else {
-                        if (!this.__has(prop)) {
-                            this.__set(prop, val, false);
+                        if (!this.__has(property)) {
+                            this.__set(property, value, false);
                         }
                     }
                 }
-                if (init instanceof Array) {
+
+                if (Array.isArray(init)) {
                     this.array;
                 }
-            } else if (init) {
-                if (!this.__has('value')) {
-                    this.__set('value', init, false);
-                }
+            } else if (init && !this.__has('value')) {
+                this.__set('value', init, false);
             }
         }
     }
 
     toJSON() {
-        if (this.#_array) {
-            return [...this.#_array];
-        } else {
-            return { ...this.#_data };
-        }
+        return this.#_array ? [...this.#_array] : { ...this.#_data };
     }
 
     get flat(): Flattened {
         const array = this.#_array;
+
         if (array) {
             return [...array].map((a) =>
                 a instanceof ConfigField ? a.flat : a
             );
         } else {
-            const ret: {
+            const returnValue: {
                 [key: string]: Flattened;
             } = {};
+
             for (const [key, value] of this.map.entries()) {
-                ret[key] = value instanceof ConfigField ? value.flat : value;
+                returnValue[key] =
+                    value instanceof ConfigField ? value.flat : value;
             }
-            return ret;
+
+            return returnValue;
         }
     }
 }

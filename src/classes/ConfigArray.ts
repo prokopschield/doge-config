@@ -10,21 +10,22 @@ export class ConfigArray extends Array<types.ValidConfigValue> {
     __save() {
         let index = -1;
         const keys = Object.keys(this.#_field);
-        for (const val of this) {
-            this.#_field.__set(keys[++index] || index.toString(), val, false);
+
+        for (const value of this) {
+            this.#_field.__set(keys[++index] || index.toString(), value, false);
         }
-        for (; index < keys.length; ) {
+
+        while (index < keys.length) {
             const key = keys[++index];
+
             Object.defineProperty(this.#_field, key, {
                 configurable: true,
                 enumerable: false,
-                get() {
-                    return undefined;
-                },
+                get() {},
                 set(
-                    val: types.ValidConfigValue | types.UnknownObject | object
+                    value: types.ValidConfigValue | types.UnknownObject | object
                 ) {
-                    this.__set(key, val);
+                    this.__set(key, value);
                 },
             });
         }
@@ -67,14 +68,21 @@ const methods = [
 
 for (const method of methods) {
     Object.assign(ConfigArray.prototype, {
-        [method]: function (...args: any[]) {
-            const result = (Array as any).prototype[method].call(this, ...args);
+        [method]: function (...arguments_: any[]) {
+            const result = (Array as any).prototype[method].call(
+                this,
+                ...arguments_
+            );
+
             if (result instanceof ConfigArray) {
                 Object.assign(this, result);
                 this.__save();
+
                 return this;
             }
+
             this.__save();
+
             return result;
         },
     });

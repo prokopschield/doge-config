@@ -1,10 +1,11 @@
 import { read } from 'doge-json';
 import path from 'path';
+
+import { UnknownObject, ValidConfigValue } from '../types';
+import normalizeConfigName from '../utils/normalizeConfigName';
+import writeConfig from '../utils/writeConfig';
 import ConfigArray from './ConfigArray';
 import ConfigField from './ConfigField';
-import normalizeConfigName from '../utils/normalizeConfigName';
-import { UnknownObject, ValidConfigValue } from '../types';
-import writeConfig from '../utils/writeConfig';
 
 export class Config extends ConfigField {
     constructor(name: string, defaults?: object, confdir = 'config') {
@@ -12,6 +13,7 @@ export class Config extends ConfigField {
         name = normalizeConfigName(name);
         this.#_file = path.resolve('.', confdir, name + '.json');
         const data = read(this.#_file);
+
         this.#_data = new ConfigField(this, null);
         this.#_data.__setDefault(data || {}, defaults || {});
         this.__update();
@@ -21,17 +23,16 @@ export class Config extends ConfigField {
     #_data: ConfigField;
 
     __update(): void {
-        for (const prop of Object.keys(this.#_data)) {
-            if (prop in this) {
-            } else {
-                Object.defineProperty(this, prop, {
+        for (const property of Object.keys(this.#_data)) {
+            if (property in this) {} else {
+                Object.defineProperty(this, property, {
                     configurable: true,
                     enumerable: true,
                     get() {
-                        return this.__get(prop);
+                        return this.__get(property);
                     },
-                    set(val: ValidConfigValue | UnknownObject | object) {
-                        this.__set(prop, val);
+                    set(value: ValidConfigValue | UnknownObject | object) {
+                        this.__set(property, value);
                     },
                 });
             }
@@ -47,79 +48,79 @@ export class Config extends ConfigField {
         return this.#_data.array;
     }
 
-    __get(prop: string): ValidConfigValue {
-        return this.#_data.__get(prop);
+    __get(property: string): ValidConfigValue {
+        return this.#_data.__get(property);
     }
 
     __set(
-        prop: string,
-        val: ValidConfigValue | UnknownObject | object,
+        property: string,
+        value: ValidConfigValue | UnknownObject | object,
         save = true
     ): ValidConfigValue {
-        return this.#_data.__set(prop, val, save);
+        return this.#_data.__set(property, value, save);
     }
 
     save(): void {
         return this.__save();
     }
 
-    get(prop: string): ValidConfigValue {
-        return this.__get(prop);
+    get(property: string): ValidConfigValue {
+        return this.__get(property);
     }
 
     set(
-        prop: string,
-        val: ValidConfigValue | UnknownObject | object
+        property: string,
+        value: ValidConfigValue | UnknownObject | object
     ): ValidConfigValue {
-        return this.__set(prop, val);
+        return this.__set(property, value);
     }
 
-    has(prop: string): boolean {
-        return this.__has(prop);
+    has(property: string): boolean {
+        return this.__has(property);
     }
 
-    __getField(prop: string): ConfigField {
-        return this.#_data.__getField(prop);
+    __getField(property: string): ConfigField {
+        return this.#_data.__getField(property);
     }
 
-    __getString(prop: string): string {
-        return this.#_data.__getString(prop);
+    __getString(property: string): string {
+        return this.#_data.__getString(property);
     }
 
-    __getNumber(prop: string): number {
-        return this.#_data.__getNumber(prop);
+    __getNumber(property: string): number {
+        return this.#_data.__getNumber(property);
     }
 
-    __getBoolean(prop: string): boolean {
-        return this.#_data.__getBoolean(prop);
+    __getBoolean(property: string): boolean {
+        return this.#_data.__getBoolean(property);
     }
 
-    __getArray(prop: string): ConfigArray {
-        return this.__getField(prop).array;
+    __getArray(property: string): ConfigArray {
+        return this.__getField(property).array;
     }
 
-    __forceField(prop: string): ConfigField {
-        return this.#_data.__forceField(prop);
+    __forceField(property: string): ConfigField {
+        return this.#_data.__forceField(property);
     }
 
-    __forceString(prop: string): string {
-        return this.#_data.__forceString(prop);
+    __forceString(property: string): string {
+        return this.#_data.__forceString(property);
     }
 
-    __forceNumber(prop: string): number {
-        return this.#_data.__forceNumber(prop);
+    __forceNumber(property: string): number {
+        return this.#_data.__forceNumber(property);
     }
 
-    __forceBoolean(prop: string): boolean {
-        return this.#_data.__forceBoolean(prop);
+    __forceBoolean(property: string): boolean {
+        return this.#_data.__forceBoolean(property);
     }
 
-    __forceArray(prop: string): ConfigArray {
-        return this.#_data.__forceArray(prop);
+    __forceArray(property: string): ConfigArray {
+        return this.#_data.__forceArray(property);
     }
 
-    __has(prop: string): boolean {
-        return prop in this.#_data;
+    __has(property: string): boolean {
+        return property in this.#_data;
     }
 
     __setDefault(...initArray: Array<any>): void {

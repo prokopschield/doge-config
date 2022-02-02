@@ -6,11 +6,14 @@ const configs = new Map<string, ConfigDir>();
 export function getConfigDir(name: string, defaults?: object): ConfigDir {
     name = normalizeConfigName(name);
     const config = configs.get(name);
+
     if (config) {
         return config;
     } else {
         const config = new ConfigDir(name, defaults);
+
         configs.set(name, config);
+
         return config;
     }
 }

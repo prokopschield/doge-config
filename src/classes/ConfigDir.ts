@@ -1,5 +1,6 @@
 import { fs } from 'doge-json';
 import path from 'path';
+
 import { UnknownObject } from '../types';
 import normalizeConfigName from '../utils/normalizeConfigName';
 import Config from './Config';
@@ -16,15 +17,14 @@ export class ConfigDir {
         } = {};
         const getConfig = (name: string) => {
             const normalized = normalizeConfigName(name);
-            if (configs[normalized]) {
-                return configs[normalized];
-            } else {
-                return (configs[normalized] = new Config(
-                    normalized,
-                    defaults,
-                    full_path
-                ));
-            }
+
+            return configs[normalized]
+                ? configs[normalized]
+                : (configs[normalized] = new Config(
+                      normalized,
+                      defaults,
+                      full_path
+                  ));
         };
         const proxy: ConfigDir = new Proxy(this, {
             get(_target, key: string) {
@@ -32,6 +32,7 @@ export class ConfigDir {
             },
             has(_target, key: string) {
                 key = normalizeConfigName(key);
+
                 return (
                     key in configs ||
                     fs.existsSync(path.resolve(full_path, `${key}.json`))
@@ -40,15 +41,18 @@ export class ConfigDir {
             set(_target, key: string, value: UnknownObject) {
                 if (typeof value === 'object') {
                     const config = getConfig(key.toString());
-                    for (const [key, val] of Object.entries(value)) {
-                        config.__set(key, val);
+
+                    for (const [key, value_] of Object.entries(value)) {
+                        config.__set(key, value_);
                     }
                 } else {
                     getConfig('data').__set(key, value);
                 }
+
                 return true;
             },
         });
+
         return proxy;
     }
 }

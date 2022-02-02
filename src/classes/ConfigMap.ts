@@ -1,5 +1,5 @@
-import ConfigField from './ConfigField';
 import { ValidConfigValue } from '../types';
+import ConfigField from './ConfigField';
 
 const MapField = new WeakMap<ConfigMap, ConfigField>();
 const FieldMap = new WeakMap<ConfigField, ConfigMap>();
@@ -15,73 +15,91 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
     }
     get field(): ConfigField {
         const field = MapField.get(this);
+
         if (field) return field;
+
         throw new Error('ConfigField is gone!');
     }
     get size(): number {
         return this.field.array.length;
     }
     *[Symbol.iterator]() {
-        for (const val of Object.entries(this.field)) {
-            yield val;
+        for (const value of Object.entries(this.field)) {
+            yield value;
         }
     }
     clear() {
-        const field = this.field;
+        const { field } = this;
+
         field.array.filter((_a) => false);
+
         return field;
     }
-    delete(prop: string | Symbol) {
-        const field = this.field;
-        field.__set(prop.toString(), null);
+    delete(property: string | Symbol) {
+        const { field } = this;
+
+        field.__set(property.toString(), null);
+
         return true;
     }
     entries() {
         const iterate = this[Symbol.iterator]();
-        const iterator = {
+
+        return {
             [Symbol.iterator]: () => this.entries(),
             next: () => iterate.next(),
         };
-        return iterator;
     }
     forEach(
-        cb: (item: ValidConfigValue, prop: string, map: ConfigMap) => any,
-        thisArg: any
+        callback: (
+            item: ValidConfigValue,
+            property: string,
+            map: ConfigMap
+        ) => any,
+        thisArgument: any
     ) {
-        const field = this.field;
-        for (const prop of Object.keys(field)) {
+        const { field } = this;
+
+        for (const property of Object.keys(field)) {
             try {
-                cb.call(thisArg || this, field.__get(prop), prop, this);
+                callback.call(
+                    thisArgument || this,
+                    field.__get(property),
+                    property,
+                    this
+                );
             } catch (error) {
                 console.error(error);
             }
         }
+
         return field;
     }
-    get(prop: string) {
-        return this.field.__get(prop) ?? undefined;
+    get(property: string) {
+        return this.field.__get(property) ?? undefined;
     }
-    has(prop: string) {
-        return this.field.__has(prop);
+    has(property: string) {
+        return this.field.__has(property);
     }
-    set(prop: string, val: ValidConfigValue | object) {
-        this.field.__set(prop, val);
+    set(property: string, value: ValidConfigValue | object) {
+        this.field.__set(property, value);
+
         return this;
     }
     *keys_iter() {
-        for (const val of Object.keys(this.field)) {
-            if (this.field.__get(val)) {
-                yield val;
+        for (const value of Object.keys(this.field)) {
+            if (this.field.__get(value)) {
+                yield value;
             }
         }
     }
     keys() {
         const iterate = this.keys_iter();
-        const iterator = {
+
+        return {
             [Symbol.iterator]: () => this.keys(),
             next: () => iterate.next(),
         };
-        return iterator;
     }
     *vals_iter() {
         for (const key of this.keys_iter()) {
@@ -90,11 +108,11 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
     }
     values() {
         const iterate = this.vals_iter();
-        const iterator = {
+
+        return {
             [Symbol.iterator]: () => this.values(),
             next: () => iterate.next(),
         };
-        return iterator;
     }
     [Symbol.toStringTag] = 'ConfigMap';
 }
