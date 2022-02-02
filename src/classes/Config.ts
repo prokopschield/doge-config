@@ -24,8 +24,7 @@ export class Config extends ConfigField {
 
     __update(): void {
         for (const property of Object.keys(this.#_data)) {
-            if (property in this) {
-            } else {
+            if (!(property in this)) {
                 Object.defineProperty(this, property, {
                     configurable: true,
                     enumerable: true,
