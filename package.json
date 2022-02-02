@@ -1,26 +1,26 @@
 {
-	"name": "doge-config",
-	"description": "One-line config file, or more",
-	"version": "0.3.15",
-	"main": "lib/index",
-	"author": "Prokop Schield",
-	"license": "GPL-3.0-or-later",
-	"devDependencies": {
-		"@types/node": ">=14"
-	},
-	"keywords": [],
-	"directories": {
-		"lib": "lib"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/prokopschield/doge-config.git"
-	},
-	"bugs": {
-		"url": "https://github.com/prokopschield/doge-config/issues"
-	},
-	"homepage": "https://github.com/prokopschield/doge-config#readme",
-	"dependencies": {
-		"doge-json": "^1.2.8"
-	}
+    "name": "doge-config",
+    "description": "One-line config file, or more",
+    "version": "0.3.15",
+    "main": "lib/index",
+    "author": "Prokop Schield",
+    "license": "GPL-3.0-or-later",
+    "devDependencies": {
+        "@types/node": ">=14"
+    },
+    "keywords": [],
+    "directories": {
+        "lib": "lib"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/prokopschield/doge-config.git"
+    },
+    "bugs": {
+        "url": "https://github.com/prokopschield/doge-config/issues"
+    },
+    "homepage": "https://github.com/prokopschield/doge-config#readme",
+    "dependencies": {
+        "doge-json": "^1.2.8"
+    }
 }
