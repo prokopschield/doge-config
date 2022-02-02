@@ -1,7 +1,7 @@
 {
 	"name": "doge-config",
 	"description": "One-line config file, or more",
-	"version": "0.3.14",
+	"version": "0.3.15",
 	"main": "lib/index",
 	"author": "Prokop Schield",
 	"license": "GPL-3.0-or-later",
@@ -21,7 +21,6 @@
 	},
 	"homepage": "https://github.com/prokopschield/doge-config#readme",
 	"dependencies": {
-		"doge-json": "^1.2.8",
-		"require-gpl": "^0.1.1"
+		"doge-json": "^1.2.8"
 	}
 }

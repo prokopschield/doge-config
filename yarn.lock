@@ -7,14 +7,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.9.tgz#b97c057e6138adb7b720df2bd0264b03c9f504fd"
   integrity sha512-CMjgRNsks27IDwI785YMY0KLt3co/c0cQ5foxHYv/shC2w8oOnVwz5Ubq1QG5KzrcW+AXk6gzdnxIkDnTvzu3g==
 
-doge-json@^1.2.7, doge-json@^1.2.8:
+doge-json@^1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.2.8.tgz#e4c5f51143721d64a1169441be8539680d6439d6"
   integrity sha512-C5BpA66G4XLi0EiUq2ZUIeX3MKoD2ceFxMcjyUlxONiCtMW6sm5O+UDpnJ5gkOBWvNngT94tz0AKXPaPfqOtAQ==
-
-require-gpl@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/require-gpl/-/require-gpl-0.1.1.tgz#010152f7b91178f47f2eb7602617e3a58f2becf2"
-  integrity sha512-IB5nYqvAD7Q4SMJzSXHA0E1aW69dKqWWeXn04mu7TDRKhsmZKcv+D/o+QNmwrPlUOzVOX2f39pGqlehlPk09RA==
-  dependencies:
-    doge-json "^1.2.7"
