@@ -3,6 +3,9 @@
     "description": "One-line config file, or more",
     "version": "0.3.15",
     "main": "lib/index",
+    "scripts": {
+        "lint": "eslint -c .eslintrc.json --ext .ts ./src"
+    },
     "author": "Prokop Schield",
     "license": "GPL-3.0-or-later",
     "devDependencies": {
