@@ -15,13 +15,15 @@ export class ConfigArray extends Array<types.ValidConfigValue> {
             this.#_field.__set(keys[++index] || index.toString(), value, false);
         }
 
-        while (index < keys.length) {
-            const key = keys[++index];
+        while (++index < keys.length) {
+            const key = keys[index];
 
             Object.defineProperty(this.#_field, key, {
                 configurable: true,
                 enumerable: false,
-                get() {},
+                get() {
+                    return this.__get(key);
+                },
                 set(
                     value: types.ValidConfigValue | types.UnknownObject | object
                 ) {
