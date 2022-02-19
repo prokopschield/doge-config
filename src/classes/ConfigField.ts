@@ -44,11 +44,11 @@ export class ConfigField {
     }
 
     get str() {
-        return this.__getTypedProxy(String);
+        return this.__getTypedProxy((a) => (a ? String(a) : ''));
     }
 
     get num() {
-        return this.__getTypedProxy(Number);
+        return this.__getTypedProxy((a) => Number(a) || 0);
     }
 
     get obj(): {
