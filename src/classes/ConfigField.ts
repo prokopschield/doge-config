@@ -327,6 +327,11 @@ export class ConfigField {
             return returnValue;
         }
     }
+
+    __delete(property: string) {
+        delete this.#_data[property];
+        delete (this as any)[property];
+    }
 }
 
 export default ConfigField;
