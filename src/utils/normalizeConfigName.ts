@@ -3,7 +3,7 @@ export function normalizeConfigName(name: string) {
         name
             .toLowerCase()
             .replace(/\.json/gi, '')
-            .replace(/[^\da-z]+/, '-') || 'invalid'
+            .replace(/[^\da-z]+/g, '-') || 'invalid'
     );
 }
 
