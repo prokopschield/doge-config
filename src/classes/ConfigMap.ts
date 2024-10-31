@@ -23,7 +23,7 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
     get size(): number {
         return this.field.array.length;
     }
-    *[Symbol.iterator]() {
+    *[Symbol.iterator](): Generator<[string, ValidConfigValue]> {
         for (const value of Object.entries(this.field)) {
             yield value;
         }
@@ -86,7 +86,7 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
 
         return this;
     }
-    *keys_iter() {
+    *keys_iter(): Generator<string> {
         for (const value of Object.keys(this.field)) {
             if (this.field.__get(value)) {
                 yield value;
@@ -101,7 +101,7 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
             next: () => iterate.next(),
         };
     }
-    *vals_iter() {
+    *vals_iter(): Generator<ValidConfigValue> {
         for (const key of this.keys_iter()) {
             yield this.field.__get(key);
         }
