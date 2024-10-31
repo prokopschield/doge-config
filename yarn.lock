@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.9.tgz#b97c057e6138adb7b720df2bd0264b03c9f504fd"
   integrity sha512-CMjgRNsks27IDwI785YMY0KLt3co/c0cQ5foxHYv/shC2w8oOnVwz5Ubq1QG5KzrcW+AXk6gzdnxIkDnTvzu3g==
 
-doge-json@^1.2.13:
-  version "1.2.13"
-  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.2.13.tgz#d3b69caa5a87eb3a868025223308327c6580d6f2"
-  integrity sha512-CVU/cIdqeXXSeI3HwyA8kgthSmXUuddABiislBSTT5TvKCRamq2dcCDjEoq/WvvmKux1edZeRDpwTADW6CfydQ==
+doge-json@^1.2.14:
+  version "1.2.14"
+  resolved "https://registry.yarnpkg.com/doge-json/-/doge-json-1.2.14.tgz#d520777f384611f3021397f29b2bda793d23ffff"
+  integrity sha512-aHdi39pTUiB2bjw326mngEns/SJW4fcAX8+tDJEbkTZWYJrAQvCZ7d28UHT4wqkdpNoEzI1CBV2mZ817SC04qQ==
