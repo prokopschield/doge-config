@@ -23,7 +23,7 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
     get size(): number {
         return this.field.array.length;
     }
-    *[Symbol.iterator](): Generator<[string, ValidConfigValue]> {
+    *[Symbol.iterator](): Generator<[string, ValidConfigValue], undefined> {
         for (const value of Object.entries(this.field)) {
             yield value;
         }
