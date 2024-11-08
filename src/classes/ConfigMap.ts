@@ -27,6 +27,9 @@ export class ConfigMap implements Map<string, ValidConfigValue> {
         for (const value of Object.entries(this.field)) {
             yield value;
         }
+
+        // typescript demands undefined, refuses void
+        return undefined;
     }
     clear() {
         const { field } = this;
